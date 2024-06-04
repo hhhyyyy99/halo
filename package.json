@@ -4,12 +4,34 @@
   "description": "A radiant collection of utility plugins and tool functions designed to illuminate and streamline your development process",
   "main": "index.js",
   "scripts": {
-    "new": "ts-node scripts/generator.ts"
+    "new": "ts-node scripts/generator.ts",
+    "build": "ts-node scripts/build.ts",
+    "build:rollup": "rollup -c rollup.config.ts --configPlugin typescript"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "24.0.1",
+    "@rollup/plugin-json": "6.0.0",
+    "@rollup/plugin-node-resolve": "15.0.1",
+    "@rollup/plugin-replace": "5.0.2",
+    "@rollup/plugin-terser": "0.4.0",
+    "@rollup/plugin-typescript": "11.0.0",
+    "@types/ejs": "3.1.5",
+    "@types/fs-extra": "11.0.4",
+    "@types/rollup-plugin-css-only": "3.1.3",
+    "@types/rollup-plugin-node-builtins": "2.1.2",
+    "@types/rollup-plugin-node-globals": "1.4.1",
+    "ejs": "3.1.10",
+    "fs-extra": "11.2.0",
+    "rollup-plugin-css-only": "4.5.2",
+    "rollup-plugin-dts": "6.1.1",
+    "rollup-plugin-node-builtins": "2.1.2",
+    "rollup-plugin-node-externals": "5.1.2",
+    "rollup-plugin-node-globals": "1.4.0",
+    "rollup-plugin-polyfill-node": "0.12.0",
+    "rollup-plugin-typescript2": "0.34.1",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0"
   }
