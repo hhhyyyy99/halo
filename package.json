@@ -1,0 +1,16 @@
+{
+  "name": "halo",
+  "version": "1.0.0",
+  "description": "A radiant collection of utility plugins and tool functions designed to illuminate and streamline your development process",
+  "main": "index.js",
+  "scripts": {
+    "new": "ts-node scripts/generator.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "10.9.2",
+    "tsconfig-paths": "4.2.0"
+  }
+}
