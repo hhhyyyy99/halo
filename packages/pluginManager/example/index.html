@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>插件管理器示例页面</title>
+</head>
+<body>
+<script type="module">
+    import PluginManager from '../dist/index.js'
+    import examplePlugin from './plugins/examplePlugin.js'
+    const pluginManager = new PluginManager()
+    const examplePluginInstance = new examplePlugin()
+    pluginManager.register(examplePluginInstance)
+    pluginManager.initPluginContext(examplePluginInstance,pluginManager)
+    setTimeout(() => {
+        console.log("卸载了插件")
+        pluginManager.unregister(examplePluginInstance)
+    }, 1000)
+</script>
+</body>
+</html>
