@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script type="module">
+    import TaskManager,{TaskFactory,ConsoleLogger} from '../dist/index.js'
+
+    const logger = new ConsoleLogger();
+    const taskManager = new TaskManager(logger);
+
+    // 创建简单任务
+    const simpleTaskConfig = { id: '1', name: 'Simple Task 1', delay: 1000 };
+    const simpleTask = TaskFactory.createSimpleTask(simpleTaskConfig);
+
+    // 创建定时任务
+    const timedTaskConfig = { id: '2', name: 'Timed Task 1', executionTime: Date.now() + 2000 };
+    const timedTask = TaskFactory.createTimedTask(timedTaskConfig);
+
+    // 创建条件任务
+    const conditionalTaskConfig = { id: '3', name: 'Conditional Task 1', condition: () => true };
+    const conditionalTask = TaskFactory.createConditionalTask(conditionalTaskConfig);
+
+    taskManager.addTask(simpleTask);
+    taskManager.addTask(timedTask);
+    taskManager.addTask(conditionalTask);
+
+    taskManager.runAllPendingTasks().then(() => {
+        console.log('All tasks have been processed');
+        [simpleTask, timedTask, conditionalTask].forEach(task => {
+            const status = taskManager.getTaskStatus(task.id);
+            console.log(`Task ${task.name} - Status: ${status?.status}`);
+        });
+    });
+</script>
+</body>
+</html>
