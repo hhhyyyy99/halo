@@ -8,10 +8,33 @@
     <title>插件管理器示例页面</title>
 </head>
 <body>
+<button id="register">注册脚本</button>
+<button id="unregister">卸载脚本</button>
+<textarea id="code">console.log("Hello World")</textarea>
 <script type="module">
-    import PluginManager from '../dist/index.js'
+    import PluginManager,{ScriptType} from '../dist/index.js'
     import examplePlugin from './plugins/examplePlugin.js'
     const pluginManager = new PluginManager()
+
+    const registerBtn = document.getElementById('register')
+    const unregisterBtn = document.getElementById('unregister')
+    const codeArea = document.getElementById('code')
+
+    let exampleScript = null
+    registerBtn.addEventListener('click', () => {
+       const code = codeArea.value
+       const context = `console.log("Hello World111111")`
+         exampleScript = {
+           name:"exampleScript",
+            type:ScriptType.CODE,
+            context:context
+        }
+        pluginManager.registerScript(exampleScript)
+    })
+
+    unregisterBtn.addEventListener('click', () => {
+        pluginManager.unregisterScript(exampleScript)
+    })
     const examplePluginInstance = new examplePlugin()
     pluginManager.register(examplePluginInstance)
     pluginManager.initPluginContext(examplePluginInstance,pluginManager)
