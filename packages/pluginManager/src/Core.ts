@@ -6,7 +6,7 @@ export interface CoreConfig{
 }
 export class PluginManager extends PluginEventEmitter{
     private sandboxMap = new Map<string, ProxySandBox>()
-    private scriptPlugins = new Set<string>()
+    private scriptPlugins = new Set<ScriptPlugin['name']>()
     constructor(private readonly coreConfig:CoreConfig = {} ) {
         super(coreConfig);
         this.mountPlugins()
@@ -15,10 +15,9 @@ export class PluginManager extends PluginEventEmitter{
         const { plugins = [] } = this.coreConfig;
         const defaultPlugins = [...plugins];
         this.register(defaultPlugins);
-        console.log("rhis",this)
         this.initPluginContext(defaultPlugins, this);
     }
-    public registerScript(plugin:  ScriptPlugin[]|ScriptPlugin){
+    public registerScript(plugin:  ScriptPlugin[] | ScriptPlugin){
         const plugins = Array.isArray(plugin) ? plugin : [plugin];
         plugins.forEach((plugin) => {
             if(this.scriptPlugins.has(plugin.name)){
@@ -37,22 +36,23 @@ export class PluginManager extends PluginEventEmitter{
         script.type = 'text/javascript';
         switch (type){
             case ScriptType.URL:
+                // TODO: 加载远程脚本, 并注入到sandbox中,思路是通过请求获取脚本内容然后执行runScript方法
                 script.src = context;
                 break;
             case ScriptType.CODE:
-                script.textContent = context;
                 this.runScript(sandbox.proxy, context)
                 break;
             default:
-                console.log(`插件类型${type}不支持`)
+                console.log(`脚本类型${type}不支持`)
                 return;
         }
         script.id = name;
         this.sandboxMap.set(name, sandbox)
         head.appendChild(script)
     }
-    public runScript(window: WindowProxy,code:string){
-       new Function(code).call(window)
+    public runScript(globalThis: WindowProxy,code:string){
+        const func = new Function("globalThis", code);
+        func(globalThis);
     }
     public unregisterScript(plugin: ScriptPlugin): void {
         if (!this.scriptPlugins.has(plugin.name)) {
