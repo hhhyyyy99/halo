@@ -13,7 +13,7 @@
       nameInput.addEventListener('input', e => {
         const inputValue = e.target.value;
         const linkedValue = link(inputValue, match => {
-          return `<span>${match}</span>`;
+          return `<span >${match}</span>`;
         });
         console.log(linkedValue);
       });
