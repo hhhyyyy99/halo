@@ -1,5 +1,5 @@
 {
-  "name": "@halo/pluginManager",
+  "name": "@eamon98/plugin-manager",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -11,5 +11,13 @@
   "files": [
     "dist/**/*",
     "example/**/*"
-  ]
+  ],
+  "license": "MIT",
+  "publishConfig":{
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "typings":"dist/index.d.ts",
+    "types":"dist/index.d.ts",
+    "main":"dist/index.js"
+  }
 }

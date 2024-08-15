@@ -1,5 +1,5 @@
 {
-  "name": "@halo/<%= name %>",
+  "name": "@eamon98/<%= name %>",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -16,6 +16,7 @@
     "type": "git",
     "url": "https://github.com/hhhyyyy99/halo.git"
   },
+  "license": "MIT",
   "publishConfig":{
     "access": "public",
     "registry": "https://registry.npmjs.org",
