@@ -12,17 +12,17 @@
     "dist/**/*",
     "example/**/*"
   ],
-  "repository":{
+  "repository": {
     "type": "git",
-    "url": "https://github.com/hhhyyyy99/halo.git"
+    "url": "https://github.com/hhhyyyy99/halo/tree/master/packages/autolinker"
   },
   "license": "MIT",
-  "publishConfig":{
+  "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "typings":"dist/index.d.ts",
-    "types":"dist/index.d.ts",
-    "main":"dist/index.js"
+    "typings": "dist/index.d.ts",
+    "types": "dist/index.d.ts",
+    "main": "dist/index.js"
   },
   "dependencies": {
     "dompurify": "3.0.8"
