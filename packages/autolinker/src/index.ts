@@ -2,25 +2,13 @@ import * as Regex from './regex';
 import * as Verify from './verify';
 import DOMpurify from 'dompurify';
 
-// export function replace(
-//   arg:
-//     | string
-//     | {
-//         input: string;
-//         element?: (match: string) => string;
-//       }
-// ) {
-//   let { input, element } = typeof arg === 'string' ? { input: arg, element: undefined } : arg;
-//   const combinedRegex = new RegExp(`${urlRegex.source}|${ipRegex.source}`, 'gi');
-//   const result = input.replace(combinedRegex, match => {
-//     return element ? element(match) : `<a href="${match}" target="_blank">${match}</a>`;
-//   });
-//   return DOMpurify.sanitize(result); // 防止xss攻击
-// }
-
 function link(input: string, element?: (match: string) => string) {
   const result = input.replace(Regex.textToUrlRegex, match => {
-    return element ? element(match) : `<a href="${match}" target="_blank">${match}</a>`;
+    if (element) {
+      return element(match);
+    }
+    const url = match.startsWith('http') ? match : `http://${match}`;
+    return `<a href="${url}" target="_blank">${match}</a>`;
   });
   return DOMpurify.sanitize(result); // 防止xss攻击
 }
@@ -48,7 +36,7 @@ function extractMatchesAndText(text: string, regex: RegExp) {
 
   // 根据匹配项的位置信息来提取未匹配的文本部分和匹配项
   let currentPos = 0;
-  for (const { start, end, content } of matchDetails) {
+  for (const {start, end, content} of matchDetails) {
     if (start > currentPos) {
       // 添加未匹配的文本部分
       result.push(text.substring(currentPos, start));
@@ -94,4 +82,5 @@ function extractLinks(text: string) {
     return acc;
   }, []);
 }
-export { link, extractLinks, extractMatchesAndText, Regex, Verify };
+
+export {link, extractLinks, extractMatchesAndText, Regex, Verify};
