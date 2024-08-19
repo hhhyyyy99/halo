@@ -4,19 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      textarea {
+        width: 500px;
+        height: 300px;
+      }
+    </style>
   </head>
   <body>
-    <input type="text" id="input" placeholder="Enter text here" />
+    <textarea type="text" id="textarea" placeholder="Enter text here"></textarea>
+    <input type="text" id="input" value="V2TIMManager.getConversationManager"/>
+    <input type="button" value="Link"/>
     <script type="module">
-      import { link } from '../dist/index.js';
-      const nameInput = document.querySelector('input');
-      nameInput.addEventListener('input', e => {
+      import { link, extractLinks, Verify, Regex } from '../dist/index.js';
+      const nameTextarea = document.querySelector('textarea');
+      const inputText = document.querySelector('input');
+      inputText.addEventListener('click', e => {
+        e.preventDefault();
+        const inputValue = inputText.value;
+        console.log(Verify.isUrl(inputValue));
+      })
+      nameTextarea.value = 'V2TIMManager.getConversationManager';
+      nameTextarea.addEventListener('input', e => {
         const inputValue = e.target.value;
-        const linkedValue = link(inputValue, match => {
-          return `<span >${match}</span>`;
+        const linkedValue1 = extractLinks(inputValue).map(link => {
+          if (Verify.isUrl(link)) {
+            return { value: link, isUrl: true };
+          }
+          return { value: link, isUrl: false };
         });
-        console.log(linkedValue);
+        console.table("linkedValue1",linkedValue1)
       });
+ 
     </script>
   </body>
 </html>

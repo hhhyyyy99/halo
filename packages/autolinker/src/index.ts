@@ -36,7 +36,7 @@ function extractMatchesAndText(text: string, regex: RegExp) {
 
   // 根据匹配项的位置信息来提取未匹配的文本部分和匹配项
   let currentPos = 0;
-  for (const {start, end, content} of matchDetails) {
+  for (const { start, end, content } of matchDetails) {
     if (start > currentPos) {
       // 添加未匹配的文本部分
       result.push(text.substring(currentPos, start));
@@ -54,33 +54,44 @@ function extractMatchesAndText(text: string, regex: RegExp) {
 }
 
 // 根据正则提取字符串中的链接最终返回一个数组
-function extractLinks(text: string) {
+function extractLinks(text: string, urlRegex: RegExp = Regex.textToUrlRegex) {
   const chineseSplitResult = extractMatchesAndText(text, Regex.chineseRegex);
   const textToUrlResult = chineseSplitResult.reduce((acc: string[], cur: string) => {
-    if (Regex.textToUrlRegex.test(cur)) {
-      const urlMatches = extractMatchesAndText(cur, Regex.textToUrlRegex);
+    if (urlRegex.test(cur)) {
+      const urlMatches = extractMatchesAndText(cur, urlRegex);
       return [...acc, ...urlMatches];
     }
     return [...acc, cur];
   }, []);
-  return textToUrlResult.reduce((acc: string[], cur: string) => {
-    if (Regex.textToUrlRegex.test(cur)) {
-      // 如果当前元素是 URL，先将累积的非 URL 内容加入结果数组
-      if (acc.length > 0 && acc[acc.length - 1] && !Regex.textToUrlRegex.test(acc[acc.length - 1])) {
-        acc.push(cur);
-      } else {
-        acc.push(cur);
-      }
-    } else {
-      // 如果当前元素不是 URL，累积到结果数组最后一个元素（如果它不是 URL）
-      if (acc.length > 0 && !Regex.textToUrlRegex.test(acc[acc.length - 1])) {
-        acc[acc.length - 1] += cur;
-      } else {
-        acc.push(cur);
-      }
-    }
-    return acc;
-  }, []);
+  return splitAndMerge(textToUrlResult, Verify.isUrl);
 }
 
-export {link, extractLinks, extractMatchesAndText, Regex, Verify};
+// 根据 verifyFunc结果 将数组拆分为 两部分，并合并
+function splitAndMerge(arr: string[],verifyFunc: (str: string) => boolean = Verify.isUrl): string[] {
+  const result: string[] = [];
+  let currentString = "";
+
+  for (const item of arr) {
+    if (verifyFunc(item)) {
+      // 如果 currentString 不为空，先将其添加到结果数组
+      if (currentString) {
+        result.push(currentString);
+        currentString = "";
+      }
+      // 将当前 URL 项单独添加到结果数组
+      result.push(item);
+    } else {
+      // 如果不是 URL，将其拼接到 currentString
+      currentString += item;
+    }
+  }
+
+  // 如果最后还有剩余的拼接字符串，将其添加到结果数组
+  if (currentString) {
+    result.push(currentString);
+  }
+
+  return result;
+}
+
+export { link, extractLinks, extractMatchesAndText, splitAndMerge, Regex, Verify };
