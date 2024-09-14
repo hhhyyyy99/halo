@@ -79,7 +79,7 @@ export function getTextValue(text: string | TransformResult): string {
   return typeof text === 'string' ? text : text.value;
 }
 
-export function getMatchHref(value: string | TransformResult, type: MATCH_TYPE) {
+export function generateLinkHref(value: string | TransformResult, type: MATCH_TYPE) {
   const match = getTextValue(value);
   switch (type) {
     case MATCH_TYPE.LINK:

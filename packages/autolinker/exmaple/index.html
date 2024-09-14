@@ -3,39 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      textarea {
-        width: 500px;
-        height: 300px;
-      }
-    </style>
+    <title>autolinker example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../dist/index.umd.js"></script>
   </head>
-  <body>
-    <textarea type="text" id="textarea" placeholder="Enter text here"></textarea>
-    <input type="text" id="input" value="V2TIMManager.getConversationManager"/>
-    <input type="button" value="Link"/>
-    <script type="module">
-      import { link, extractLinks, Verify, Regex } from '../dist/index.js';
-      const nameTextarea = document.querySelector('textarea');
-      const inputText = document.querySelector('input');
-      inputText.addEventListener('click', e => {
-        e.preventDefault();
-        const inputValue = inputText.value;
-        console.log(Verify.isUrl(inputValue));
-      })
-      nameTextarea.value = 'V2TIMManager.getConversationManager';
-      nameTextarea.addEventListener('input', e => {
-        const inputValue = e.target.value;
-        const linkedValue1 = extractLinks(inputValue).map(link => {
-          if (Verify.isUrl(link)) {
-            return { value: link, isUrl: true };
-          }
-          return { value: link, isUrl: false };
-        });
-        console.table("linkedValue1",linkedValue1)
+  <body class="p-6">
+    <textarea id="textarea" class="w-[400px] h-[200px] border border-black" oninput="handleInput(event.target.value)"></textarea>
+    <div id="content"></div>
+    <script>
+      const contentElement = document.getElementById('content');
+      const textarea = document.getElementById('textarea');
+      const { link, list, generateLinkHref, isUrl, isEmail, isPhone, MATCH_TYPE, isTransformResult } = autolinker;
+      //const text = 'www.baidu.com好家伙，这aaa127.0.0.1:9000hgdhjagdjw是一个测试http://192.168.0.1:9000啊大大大127.0.0.1,eamon@gmail.com';
+      const text = 'www.baidu.com,18780107098,127.0.0.1,eamon@gmail.com';
+
+      addEventListener('load', () => {
+        textarea.value = text;
+        handleInput(text);
       });
- 
+      function handleInput(value) {
+        const text = value;
+        const result = link(text, (match, type) => {
+          const herf = generateLinkHref(value, type);
+          return `<a href="${herf}" target="_blank" class="text-blue-500 hover:text-blue-800">${match}</a>`;
+        });
+        const links = list(text).map(link => {
+          if (isTransformResult(link)) {
+            const { value, type } = link;
+            switch (type) {
+              case MATCH_TYPE.LINK:
+                return { value, type, isUrl: isUrl(value) };
+              case MATCH_TYPE.PHONE:
+                return { value, type, isPhone: isPhone(value) };
+              case MATCH_TYPE.EMAIL:
+                return { value, type, isEmail: isEmail(value) };
+            }
+          }
+          return link;
+        });
+        console.log(result);
+        console.log(links);
+        contentElement.innerHTML = result;
+      }
     </script>
   </body>
 </html>
